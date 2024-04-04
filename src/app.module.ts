@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [TasksModule,
@@ -13,10 +14,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
     username: 'postgres',
     password: 'postgres',
     database: 'tasks',
-    models: [__dirname + '/models'],
+    models: [],
     autoLoadModels: true,
     synchronize: true
-  })],
+  }),
+  AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
