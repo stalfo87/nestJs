@@ -10,25 +10,25 @@ export class TasksService {
 
     constructor(
         @InjectModel(Task)
-        private userModel: typeof Task,
+        private taskModel: typeof Task,
     ) {}
 
     getTasks(filteredTasksDto: FilteredTasksDto): Promise<Task[]> {
-        return this.userModel.getTasks(filteredTasksDto)
+        return this.taskModel.getTasks(filteredTasksDto)
     }
 
     createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-        return this.userModel.createTask(createTaskDto)
+        return this.taskModel.createTask(createTaskDto)
     }
 
     async getTaskById(id: string): Promise<Task> {
-        const found = await this.userModel.findByPk(id)
+        const found = await this.taskModel.findByPk(id)
         if (!found) throw new NotFoundException()
         return found
     }
 
     async deleteTask(id: string) {
-        const deleted = await this.userModel.deleteTaskById(id)
+        const deleted = await this.taskModel.deleteTaskById(id)
 
         if (deleted === 0) throw new NotFoundException()
     }
