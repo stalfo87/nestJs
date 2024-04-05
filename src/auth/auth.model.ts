@@ -1,6 +1,7 @@
 import { Column, DataType, Model, Table, PrimaryKey, Default, Unique } from 'sequelize-typescript';
 import { AuthCredentialsDto } from './dtos/auth-credentials.dta';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt'
 
 @Table
 export class User extends Model {
@@ -21,8 +22,9 @@ export class User extends Model {
 
     static createUser = async (authCredentialsDto: AuthCredentialsDto): Promise<void> => {
         const { username, password } = authCredentialsDto
-
-        const user = new User({username, password})
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt)
+        const user = new User({username, password: hashedPassword})
 
         try {
             await user.save()
