@@ -33,7 +33,7 @@ export class AuthService {
             const payload: JwtPayload = {
                 username
             }
-            const accessToken: string = this.jwtService.sign(payload)
+            const accessToken: string = this.jwtService.sign(payload, {secret: '3.1416'})
             return { accessToken }
         } else {
             throw new UnauthorizedException()

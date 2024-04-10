@@ -13,8 +13,8 @@ export class User extends Model {
     })
     id: string;
 
-    @Column
     @Unique
+    @Column
     username: string;
 
     @Column
