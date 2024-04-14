@@ -3,12 +3,14 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './auth.model';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { LoggerMiddleware } from './jwt.stragety';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth.guard';
 
 @Module({
   imports: [
     JwtModule.register({
+      global: true,
       secret: '3.1416',
       signOptions: {
         expiresIn: 3600
@@ -17,9 +19,11 @@ import { LoggerMiddleware } from './jwt.stragety';
     SequelizeModule.forFeature([User]),
 
   ],
-  providers: [AuthService, User, JwtService],
+  providers: [AuthService,{
+    provide: APP_GUARD,
+    useClass: AuthGuard,
+  },],
   controllers: [AuthController],
-  exports: [User, JwtService]
+  exports: [AuthService]
 })
-export class AuthModule {
-}
+export class AuthModule { }

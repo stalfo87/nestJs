@@ -22,6 +22,7 @@ export class AuthService {
 
     async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string}> {
         const {username, password} = authCredentialsDto
+        console.log(this.userModel, User)
         const user = await this.userModel.findOne({
             attributes: ['password'],
             where: {
@@ -33,7 +34,7 @@ export class AuthService {
             const payload: JwtPayload = {
                 username
             }
-            const accessToken: string = this.jwtService.sign(payload, {secret: '3.1416'})
+            const accessToken: string = await this.jwtService.signAsync(payload)
             return { accessToken }
         } else {
             throw new UnauthorizedException()

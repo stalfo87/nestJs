@@ -1,7 +1,5 @@
-// import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { Body, Controller, Get, Param, Post, Delete, Patch, Query } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-// import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { FilteredTasksDto } from './dtos/filtered-tasks.dto';
 import { UpdateStatusDto } from './dtos/update-task.dto';
