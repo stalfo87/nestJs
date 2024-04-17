@@ -1,8 +1,9 @@
-import { Column, DataType, Model, Table, PrimaryKey, Default } from 'sequelize-typescript';
+import { Column, DataType, Model, Table, PrimaryKey, Default, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { TaskStatus } from './task1.model';
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { Op } from 'sequelize';
 import { FilteredTasksDto } from './dtos/filtered-tasks.dto';
+import { User } from 'src/auth/auth.model';
 
 @Table
 export class Task extends Model {
@@ -23,26 +24,37 @@ export class Task extends Model {
     @Column
     status: TaskStatus;
 
-    static createTask = (createTaskDto: CreateTaskDto): Promise<Task> => {
+    @ForeignKey(() => User)
+    @Column({
+        type: DataType.UUID
+    })
+    userId: string;
+  
+    @BelongsTo(() => User)
+    user: User;
+
+    static createTask = (createTaskDto: CreateTaskDto, user: User): Promise<Task> => {
         const {title, description} = createTaskDto
         const task: Task = new Task({
             title,
             description,
-            status: TaskStatus.CREATED
+            status: TaskStatus.CREATED,
+            userId: user.id
         })
 
         return task.save()
     }
 
-    static deleteTaskById = (id: string): Promise<number> => {
+    static deleteTaskById = (id: string, user: User): Promise<number> => {
         return Task.destroy({
             where: {
-                id
+                id,
+                userId: user.id
             }
         })
     }
 
-    static getTasks = (filteredTasksDto: FilteredTasksDto): Promise<Task[]> => {
+    static getTasks = (filteredTasksDto: FilteredTasksDto, user: User): Promise<Task[]> => {
         const {status, title} = filteredTasksDto
         return Task.findAll({
             where: {
@@ -52,7 +64,8 @@ export class Task extends Model {
                         title: {[Op.like]: `%${title}%`},
                         description: {[Op.like]: `%${title}%`}
                     }
-                }
+                },
+                userId: user.id
             }
         })
     }

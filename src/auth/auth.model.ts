@@ -1,7 +1,8 @@
-import { Column, DataType, Model, Table, PrimaryKey, Default, Unique } from 'sequelize-typescript';
+import { Column, DataType, Model, Table, PrimaryKey, Default, Unique, HasMany } from 'sequelize-typescript';
 import { AuthCredentialsDto } from './dtos/auth-credentials.dta';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt'
+import { Task } from 'src/tasks/task.model';
 
 @Table
 export class User extends Model {
@@ -19,6 +20,9 @@ export class User extends Model {
 
     @Column
     password: string;
+
+    @HasMany(() => Task)
+    tasks: Task[];
 
     static createUser = async (authCredentialsDto: AuthCredentialsDto): Promise<void> => {
         const { username, password } = authCredentialsDto
